@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="benchmarks/SmallList.Benchmarks/SmallList.Benchmarks.csproj" Id="74bb2a72-8f7a-40ba-b218-483f279d88ec" />
+  <Project Path="src/SmallList/SmallList.csproj" Id="0e407c09-5eea-4997-90b6-66164cb9afdc" />
+  <Project Path="tests/SmallList.Tests/SmallList.Tests.csproj" Id="bac273e4-4ffa-48f9-9b10-3180a5460461" />
+</Solution>
