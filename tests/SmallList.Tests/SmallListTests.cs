@@ -296,4 +296,28 @@ public class SmallListTests
         Assert.Equal(items.Length, smallList.Count);
         Assert.Equal(expectedContains, containsNumber);
     }
+
+    [Theory]
+    [InlineData(new int[] { 1 }, 0, 123, new int[] { 123, 1 })]
+    [InlineData(new int[] { 1, 2 }, 1, 123, new int[] { 1, 123, 2 })]
+    [InlineData(new int[] { 1, 2, 3 }, 2, 123, new int[] { 1, 2, 123, 3 })]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 3, 123, new int[] { 1, 2, 3, 123, 4 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 4, 123, new int[] { 1, 2, 3, 4, 123, 5, 6 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 5, 123, new int[] { 1, 2, 3, 4, 5, 123, 6 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 7, 123, new int[] { 1, 2, 3, 4, 5, 6, 7, 123, 8 })]
+    public void Insert_MatchesExpectedItems(int[] items, int index, int item, int[] expectedItems)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act
+        smallList.Insert(index, item);
+
+        // Assert
+        Assert.Equal(smallList.Count, expectedItems.Length);
+        for (int i = 0; i < expectedItems.Length; i++)
+        {
+            Assert.Equal(expectedItems[i], smallList[i]);
+        }
+    }
 }
