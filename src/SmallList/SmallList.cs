@@ -16,7 +16,7 @@ namespace Varelen.SmallList;
 /// It is NOT safe to change this list while iterating, which is taken for a given here. So there is no internal versioning to detect modifications while enumerating.
 /// </summary>
 /// <typeparam name="T">The generic type.</typeparam>
-[DebuggerDisplay("Count = {Count}")]
+[DebuggerDisplay("Count = {Count}, Capacity = {Capacity}")]
 [StructLayout(LayoutKind.Sequential)]
 public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 {
@@ -104,7 +104,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Gets the capacity of this list.
     /// </summary>
-    public readonly int Capacity => array is null ? this.size : this.array.Length;
+    public readonly int Capacity => this.array is null ? this.size : this.array.Length;
 
     /// <summary>
     /// Returns if this list is read-only (false).
@@ -271,12 +271,24 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void Grow()
+    {
+        Debug.Assert(this.array is not null, "Can only grow if we have an array");
+        Debug.Assert(this.size >= this.array.Length, "List should be at it's limit two be able to grow");
+
+        var newArray = new T[BitOperations.RoundUpToPowerOf2((uint)(this.array!.Length * 2))];
+        this.array.AsSpan().CopyTo(newArray.AsSpan());
+        this.array = newArray;
+    }
+
     /// <summary>
     /// Adds the item to this list.
     ///
     /// This might cause one heap allocation if the size of list is already <see cref="InlinedItemsCount"/> or greater than the current <see cref="Capacity"/>.
     /// </summary>
     /// <param name="item">The item to add.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(T item)
     {
         if (this.size < InlinedItemsCount)
@@ -298,13 +310,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
             }
             else if (this.size == this.array.Length)
             {
-                Debug.Assert(BitOperations.IsPow2(this.array.Length * 2), "Length should be automatically be a power of two");
-
-                var newArray = new T[this.array.Length * 2];
-
-                this.array.AsSpan().CopyTo(newArray.AsSpan());
-
-                this.array = newArray;
+                this.Grow();
             }
 
             this.array[this.size] = item;
@@ -424,10 +430,69 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         return index;
     }
 
+    /// <summary>
+    /// Inserts the item at the given index.
+    /// </summary>
+    /// <param name="index">The target index.</param>
+    /// <param name="item">The item.</param>
+    /// <exception cref="ArgumentOutOfRangeException">If the index is larger than the current size.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Insert(int index, T item)
     {
-        throw new NotImplementedException("TODO");
+        ArgumentOutOfRangeException.ThrowIfGreaterThan((uint)index, (uint)this.size);
+
+        // Fast path because we can just shift the inlined items
+        if (this.size < InlinedItemsCount)
+        {
+            for (int i = this.size; i > index; i--)
+            {
+                ref var dest = ref Unsafe.Add(ref this.item1, i);
+                ref var src = ref Unsafe.Add(ref this.item1, i - 1);
+                dest = src;
+            }
+
+            Unsafe.Add(ref this.item1, index) = item;
+            this.size++;
+            return;
+        }
+
+        bool allocatedNewArray = false;
+
+        if (this.array is null)
+        {
+            this.array = new T[InitialCapacity];
+            this.array[0] = this.item1;
+            this.array[1] = this.item2;
+            this.array[2] = this.item3;
+            this.array[3] = this.item4;
+
+            allocatedNewArray = true;
+        }
+        else if (this.size == this.array.Length)
+        {
+            this.Grow();
+        }
+
+        Debug.Assert(this.array is not null, "Array should not be null here");
+
+        if (index < this.size)
+        {
+            Array.Copy(this.array!, index, this.array!, index + 1, this.size - index);
+        }
+
+        this.array[index] = item;
+        this.size++;
+
+        bool fixInlinedItems = allocatedNewArray || index < InlinedItemsCount;
+
+        // We only worked on the array, so fix the inlined items
+        if (fixInlinedItems)
+        {
+            this.item1 = this.array[0];
+            this.item2 = this.array[1];
+            this.item3 = this.array[2];
+            this.item4 = this.array[3];
+        }
     }
 
     /// <summary>
