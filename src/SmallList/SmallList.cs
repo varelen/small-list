@@ -20,7 +20,14 @@ namespace Varelen.SmallList;
 [StructLayout(LayoutKind.Sequential)]
 public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 {
+    /// <summary>
+    /// The count of inlinable items of this implementation.
+    /// </summary>
     private const int InlinedItemsCount = 4;
+
+    /// <summary>
+    /// The initial capacity for this list during first heap allocation.
+    /// </summary>
     private const int InitialCapacity = InlinedItemsCount * 2;
 
     // SAFETY: Do not reorder this because we use Unsafe.Add to index in these
@@ -33,6 +40,12 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 
     private int size;
 
+    /// <summary>
+    /// Gets or sets the item at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the item.</param>
+    /// <returns>The item to get or set.</returns>
+    /// <exception cref="IndexOutOfRangeException">If the index provided is outside of the bounds of this list.</exception>
     public T this[int index]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,12 +96,24 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
     }
 
+    /// <summary>
+    /// Gets the number of items in this list.
+    /// </summary>
     public readonly int Count => this.size;
 
+    /// <summary>
+    /// Gets the capacity of this list.
+    /// </summary>
     public readonly int Capacity => array is null ? this.size : this.array.Length;
 
+    /// <summary>
+    /// Returns if this list is read-only (false).
+    /// </summary>
     public readonly bool IsReadOnly => false;
 
+    /// <summary>
+    /// Creates a new allocation free instance of <see cref="SmallList{T}"/> with size of zero.
+    /// </summary>
     public SmallList()
     {
         this.item1 = default!;
@@ -99,6 +124,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 0;
     }
 
+    /// <summary>
+    /// Creates a new allocation free instance of <see cref="SmallList{T}"/> with one item.
+    /// </summary>
     public SmallList(T item)
     {
         this.item1 = item;
@@ -109,6 +137,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 1;
     }
 
+    /// <summary>
+    /// Creates a new allocation free instance of <see cref="SmallList{T}"/> with two items.
+    /// </summary>
     public SmallList(T item1, T item2)
     {
         this.item1 = item1;
@@ -119,6 +150,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 2;
     }
 
+    /// <summary>
+    /// Creates a new allocation free instance of <see cref="SmallList{T}"/> with three items.
+    /// </summary>
     public SmallList(T item1, T item2, T item3)
     {
         this.item1 = item1;
@@ -129,6 +163,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 3;
     }
 
+    /// <summary>
+    /// Creates a new allocation free instance of <see cref="SmallList{T}"/> with four items.
+    /// </summary>
     public SmallList(T item1, T item2, T item3, T item4)
     {
         this.item1 = item1;
@@ -139,6 +176,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 4;
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="SmallList{T}"/> with the given items.
+    ///
+    /// This might cause one heap allocation if the length of <paramref name="items"/> is greater than <see cref="InlinedItemsCount"/>.
+    /// </summary>
     public SmallList(T[] items)
     {
         this.item1 = default!;
@@ -192,6 +234,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
     }
 
+    /// <summary>
+    /// Creates a new instance of <see cref="SmallList{T}"/> with the given items.
+    ///
+    /// This might cause one heap allocation if there are more items in <paramref name="items"/> than <see cref="InlinedItemsCount"/>.
+    /// </summary>
     public SmallList(IEnumerable<T> items)
     {
         this.item1 = default!;
@@ -208,6 +255,12 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
     }
 
+    /// <summary>
+    /// Adds the item to this list.
+    ///
+    /// This might cause one heap allocation if the size of list is already <see cref="InlinedItemsCount"/> or greater than the current <see cref="Capacity"/>.
+    /// </summary>
+    /// <param name="item">The item to add.</param>
     public void Add(T item)
     {
         if (this.size < InlinedItemsCount)
@@ -244,6 +297,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size++;
     }
 
+    /// <summary>
+    /// Clears all items from this list.
+    /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear()
     {
@@ -261,14 +317,29 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.size = 0;
     }
 
+    /// <summary>
+    /// Returns true if the item was found in the list.
+    /// </summary>
+    /// <param name="item">The item to search for.</param>
+    /// <returns>true if found, otherwise false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Contains(T item)
         => this.size != 0 && this.IndexOf(item) >= 0;
 
+    /// <summary>
+    /// Copies all items from this list to <paramref name="array"/>.
+    /// </summary>
+    /// <param name="array">The target array.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CopyTo(T[] array)
         => this.CopyTo(array, 0);
 
+    /// <summary>
+    /// Copies all items from this list to <paramref name="array"/> at offset <paramref name="arrayIndex"/>.
+    /// </summary>
+    /// <param name="array">The target array.</param>
+    /// <param name="arrayIndex">The target array offset.</param>
+    /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="arrayIndex"/> is out of bounds.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CopyTo(T[] array, int arrayIndex)
     {
@@ -289,6 +360,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         Array.Copy(this.array!, 0, array, arrayIndex, this.size);
     }
 
+    /// <summary>
+    /// Gets the first found index of the given item.
+    /// </summary>
+    /// <param name="item">The item to find the first index of.</param>
+    /// <returns>The first index of the found item.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int IndexOf(T item)
     {
@@ -338,6 +414,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         throw new NotImplementedException("TODO");
     }
 
+    /// <summary>
+    /// Removes the item from this list.
+    /// </summary>
+    /// <param name="item">The item to remove.</param>
+    /// <returns>true if found and removed, otherwise false.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Remove(T item)
     {
@@ -352,6 +433,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         return true;
     }
 
+    /// <summary>
+    /// Removes one item at the given index from this list.
+    /// </summary>
+    /// <param name="index">The index of the item to remove.</param>
+    /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="index"/> is out of bounds.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RemoveAt(int index)
     {
@@ -398,6 +484,10 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
     }
 
+    /// <summary>
+    /// Gets the <see cref="RefEnumerator"/> for this list.
+    /// </summary>
+    /// <returns>The enemerator for this list.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly RefEnumerator GetEnumerator()
         => new(ref Unsafe.AsRef(in this));
@@ -428,8 +518,12 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     readonly IEnumerator IEnumerable.GetEnumerator()
         => ((IEnumerable<T>)this).GetEnumerator();
 
+    /// <summary>
+    /// Specialized enumerator if the list is empty.
+    /// </summary>
     public struct EmptyEnumerator : IEnumerator<T>, IEnumerator
     {
+        /// <inheritdoc/>
         public T Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -441,16 +535,19 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 
         object? IEnumerator.Current => this.Current;
 
+        /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly bool MoveNext()
             => false;
 
+        /// <inheritdoc/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Reset()
         {
             // Nothing to do
         }
 
+        /// <inheritdoc/>
         public readonly void Dispose()
         {
             // Nothing to do
