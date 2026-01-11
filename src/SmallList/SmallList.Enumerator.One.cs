@@ -15,7 +15,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// Specialized enumerator for <see cref="SmallList{T}"/> if there is only one inlined item.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct OneEnumerator : IEnumerator<T>, IEnumerator
+    internal struct OneEnumerator : IEnumerator<T>, IEnumerator
     {
         private const int Size = 1;
 
