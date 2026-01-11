@@ -407,9 +407,17 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
             return new EmptyEnumerator();
         }
 
+        // Fast path with highly specialized enumerators
         if (this.size <= InlinedItemsCount)
         {
-            return new Enumerator(this);
+            return this.size switch
+            {
+                1 => new OneEnumerator(this),
+                2 => new TwoEnumerator(this),
+                3 => new ThreeEnumerator(this),
+                4 => new FourEnumerator(this),
+                _ => throw new InvalidOperationException()
+            };
         }
 
         return new ArrayEnumerator(this);
@@ -442,54 +450,6 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         }
 
         public readonly void Dispose()
-        {
-            // Nothing to do
-        }
-    }
-
-    public struct Enumerator : IEnumerator<T>, IEnumerator
-    {
-        private readonly SmallList<T> list;
-        private readonly int size;
-
-        private int index;
-
-        public Enumerator(in SmallList<T> list)
-        {
-            this.list = list;
-            this.size = list.size;
-            this.index = -1;
-        }
-
-        public T Current
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
-            {
-                Debug.Assert(this.index >= 0 && this.index < this.size, "Current index out of range");
-
-                if (this.index < InlinedItemsCount)
-                {
-                    return Unsafe.Add(ref Unsafe.AsRef(in this.list.item1), this.index);
-                }
-
-                Debug.Assert(this.list.array != null, "Expected array to be non-null for overflow elements");
-
-                return this.list.array[this.index];
-            }
-        }
-
-        object? IEnumerator.Current => this.Current;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool MoveNext()
-            => ++this.index < this.size;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Reset()
-            => this.index = -1;
-
-        public void Dispose()
         {
             // Nothing to do
         }
