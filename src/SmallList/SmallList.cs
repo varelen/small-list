@@ -229,7 +229,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
             }
             else if (this.size == this.array.Length)
             {
-                var newArray = new T[BitOperations.RoundUpToPowerOf2((uint)(this.array.Length * 2))];
+                Debug.Assert(BitOperations.IsPow2(this.array.Length * 2), "Length should be automatically be a power of two");
+
+                var newArray = new T[this.array.Length * 2];
 
                 this.array.AsSpan().CopyTo(newArray.AsSpan());
 
