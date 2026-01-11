@@ -401,7 +401,19 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         => new(ref Unsafe.AsRef(in this));
 
     readonly IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        => this.size == 0 ? new EmptyEnumerator() : new Enumerator(this);
+    {
+        if (this.size == 0)
+        {
+            return new EmptyEnumerator();
+        }
+
+        if (this.size <= InlinedItemsCount)
+        {
+            return new Enumerator(this);
+        }
+
+        return new ArrayEnumerator(this);
+    }
 
     readonly IEnumerator IEnumerable.GetEnumerator()
         => ((IEnumerable<T>)this).GetEnumerator();
