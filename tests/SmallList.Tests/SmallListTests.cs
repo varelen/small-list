@@ -113,6 +113,30 @@ public class SmallListTests
     }
 
     [Fact]
+    public void Constructor_IEnumerableWhichIsAnICollection_MacthesExpectedItems()
+    {
+        // Arrange & Act
+        var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var empy = new SmallList<int>();
+        var smallList = new SmallList<int>(list);
+
+        // Assert
+        AssertList(empy, []);
+        AssertList(smallList, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        Assert.Equal(16, smallList.Capacity);
+
+        static void AssertList(in SmallList<int> smallList, int[] expectedItems)
+        {
+            Assert.Equal(expectedItems.Length, smallList.Count);
+
+            for (int i = 0; i < expectedItems.Length; i++)
+            {
+                Assert.Equal(expectedItems[i], smallList[i]);
+            }
+        }
+    }
+
+    [Fact]
     public void Add_MultipleItems_MatchesExpectedItems()
     {
         // Arrange
