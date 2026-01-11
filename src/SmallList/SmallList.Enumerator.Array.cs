@@ -10,6 +10,9 @@ namespace Varelen.SmallList;
 
 public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 {
+    /// <summary>
+    /// Specialized enumerator for <see cref="SmallList{T}"/> if we have heap allocated and all items are in one array.
+    /// </summary>
     public struct ArrayEnumerator : IEnumerator<T>, IEnumerator
     {
         private readonly T[] array;

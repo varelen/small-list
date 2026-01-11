@@ -535,7 +535,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         => ((IEnumerable<T>)this).GetEnumerator();
 
     /// <summary>
-    /// Specialized enumerator if the list is empty.
+    /// Specialized enumerator for empty lists.
     /// </summary>
     public struct EmptyEnumerator : IEnumerator<T>, IEnumerator
     {

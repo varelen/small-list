@@ -11,6 +11,9 @@ namespace Varelen.SmallList;
 
 public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 {
+    /// <summary>
+    /// Specialized enumerator for <see cref="SmallList{T}"/> if there is only one inlined item.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct OneEnumerator : IEnumerator<T>, IEnumerator
     {

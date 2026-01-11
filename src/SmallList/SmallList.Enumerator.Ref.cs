@@ -10,6 +10,9 @@ namespace Varelen.SmallList;
 
 public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 {
+    /// <summary>
+    /// Specialized ref enumerator for <see cref="SmallList{T}"/> without implementing <see cref="IEnumerator{T}"/> or 'IEnumerator'.
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public ref struct RefEnumerator
     {
@@ -18,6 +21,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 
         private int index;
 
+        /// <summary>
+        /// Returns the current item.
+        /// </summary>
         public T Current
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -43,10 +49,17 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
                 : ref list.item1;
         }
 
+        /// <summary>
+        /// Tries to move to the next item.
+        /// </summary>
+        /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext()
             => ++this.index < this.count;
 
+        /// <summary>
+        /// Disposes possible used resources.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly void Dispose()
         {
