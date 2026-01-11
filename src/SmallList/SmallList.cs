@@ -248,7 +248,23 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.array = null;
         this.size = 0;
 
-        // TODO: Handle ICollection<T> in special case
+        // Fast path for collections, but requires to be more than inline count,
+        // otherwise it's not really faster
+        if (items is ICollection<T> collection && collection.Count > InlinedItemsCount)
+        {
+            this.array = new T[BitOperations.RoundUpToPowerOf2((uint)collection.Count)];
+
+            collection.CopyTo(this.array, 0);
+
+            this.item1 = this.array[0];
+            this.item2 = this.array[1];
+            this.item3 = this.array[2];
+            this.item4 = this.array[3];
+
+            this.size = collection.Count;
+            return;
+        }
+
         foreach (T item in items)
         {
             this.Add(item);
