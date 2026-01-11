@@ -1,9 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+	    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.0.1-alpha1</Version>
+        <VersionPrefix>0.0.1</VersionPrefix>
+        <VersionSuffix>alpha1</VersionSuffix>
+        <PackageVersion>0.0.1-alpha1</PackageVersion>
+        <AssemblyVersion>0.0.1.0</AssemblyVersion>
+        <FileVersion>0.0.1.0</FileVersion>
+        <ProductVersion>0.0.1</ProductVersion>
+        <Authors>varelen</Authors>
+        <Title>SmallList</Title>
+        <Description>An optimized list implementation which remains fast and allocation free with up to 4 items inlined for .NET 8+.</Description>
+        <Copyright>Copyright © varelen 2026</Copyright>
+        <Summary>An optimized list implementation which remains fast and allocation free with up to 4 items inlined for .NET 8+.</Summary>
+        <PackageId>Varelen.SmallList</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/varelen/small-list</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/varelen/small-list</PackageProjectUrl>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup>
-	<TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
+    </ItemGroup>
 </Project>
