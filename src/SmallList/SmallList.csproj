@@ -23,6 +23,7 @@
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageTags>small-list performance optimization zero-allocation</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
