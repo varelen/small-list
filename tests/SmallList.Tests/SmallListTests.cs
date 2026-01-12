@@ -412,6 +412,33 @@ public class SmallListTests
         }
     }
 
+    [Theory]
+    [InlineData(new int[] { 1 })]
+    [InlineData(new int[] { 1, 2 })]
+    [InlineData(new int[] { 1, 2, 3 })]
+    [InlineData(new int[] { 1, 2, 3, 4 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6, 7 })]
+    public void Clear_GivenItems_AllItemsAreRemoved(int[] items)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act
+        smallList.Clear();
+
+        // Assert
+        Assert.Empty(smallList);
+#pragma warning disable xUnit2013 // Do not use equality check to check for collection size. - I also want to assert the internal count
+        Assert.Equal(0, smallList.Count);
+#pragma warning restore xUnit2013 // Do not use equality check to check for collection size.
+        foreach (var item in items)
+        {
+            Assert.DoesNotContain(item, smallList);
+        }
+    }
+
     private static void AssertList(in SmallList<int> smallList, int[] expectedItems)
     {
         Assert.Equal(expectedItems.Length, smallList.Count);
