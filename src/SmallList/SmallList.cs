@@ -567,6 +567,9 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 
     /// <summary>
     /// Gets the <see cref="RefEnumerator"/> for this list.
+    ///
+    /// It is not safe to modify the list while iterating over it
+    /// and there is no internal versioning to detect such modifications.
     /// </summary>
     /// <returns>The enemerator for this list.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
