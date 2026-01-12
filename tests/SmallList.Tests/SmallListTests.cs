@@ -88,14 +88,16 @@ public class SmallListTests
     public void Constructor_ZeroToFourArguments_MacthesExpectedItems()
     {
         // Arrange & Act
-        var empy = new SmallList<int>();
+        var empty = new SmallList<int>();
+        var emptyArray = new SmallList<int>([]);
         var one = new SmallList<int>(1);
         var two = new SmallList<int>(1, 2);
         var three = new SmallList<int>(1, 2, 3);
         var four = new SmallList<int>(1, 2, 3, 4);
 
         // Assert
-        AssertList(empy, []);
+        AssertList(empty, []);
+        AssertList(emptyArray, []);
         AssertList(one, [1]);
         AssertList(two, [1, 2]);
         AssertList(three, [1, 2, 3]);
