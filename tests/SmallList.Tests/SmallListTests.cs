@@ -348,7 +348,31 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { }, 1, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 1, 0)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 2, 1)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 3, 2)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 4, 3)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 100, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 5, 4)]
+    public void IndexOf_MatchesExpectedContains(int[] items, int number, int expectedIndex)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act
+        var actualIndex = smallList.IndexOf(number);
+
+        // Assert
+        Assert.Equal(items.Length, smallList.Count);
+        Assert.Equal(expectedIndex, actualIndex);
+    }
+
+    [Theory]
+    [InlineData(new int[] { }, 1, false)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 1, true)]
     [InlineData(new int[] { 1, 2, 3, 4 }, 2, true)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 3, true)]
     [InlineData(new int[] { 1, 2, 3, 4 }, 4, true)]
     [InlineData(new int[] { 1, 2, 3, 4 }, -1, false)]
     [InlineData(new int[] { 1, 2, 3, 4 }, 100, false)]
