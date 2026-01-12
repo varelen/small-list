@@ -25,7 +25,7 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --collect:"XPlat Code Coverage" --verbosity normal --results-directory ./coverage
     - name: Update Coverage Badge
-      uses: GaelGirodon/ci-badges-action@v2
+      uses: GaelGirodon/ci-badges-action@v1
       with:
         gist-id: ${{ secrets.GIST_ID }}
         gist-token: ${{ secrets.GIST_TOKEN }}
