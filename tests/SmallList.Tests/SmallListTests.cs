@@ -282,6 +282,21 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { 1, 2 }, -1)]
+    [InlineData(new int[] { 1, 2 }, 2)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 100)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 6)]
+    public void RemoveAt_InvalidIndex_ThrowsIndexOutOfRangeException(int[] items, int index)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act & Assert
+        Assert.Throws<IndexOutOfRangeException>(() => smallList.RemoveAt(index));
+    }
+
+    [Theory]
     [InlineData(new int[] { 1, 2, 3, 4 }, 1, new int[] { 1, 3, 4 })]
     [InlineData(new int[] { 1, 2, 3, 4 }, 3, new int[] { 1, 2, 3 })]
     [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 4, new int[] { 1, 2, 3, 4, 6 })]
