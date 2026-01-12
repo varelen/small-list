@@ -53,7 +53,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         {
             Debug.Assert(this.size >= 0 && this.size <= InlinedItemsCount || this.array is not null, "Invalid size/array state");
 
-            if ((uint)index > this.size)
+            if ((uint)index > (uint)this.size)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -74,7 +74,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         set
 #pragma warning restore IDE0251 // Make member 'readonly'
         {
-            if ((uint)index > this.size)
+            if ((uint)index > (uint)this.size)
             {
                 throw new IndexOutOfRangeException();
             }
@@ -365,7 +365,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (arrayIndex < 0 || ((uint)(arrayIndex + array.Length) > this.size))
+        if (arrayIndex < 0 || ((uint)(arrayIndex + array.Length) > (uint)this.size))
         {
             throw new ArgumentOutOfRangeException(nameof(arrayIndex));
         }
