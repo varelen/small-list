@@ -331,7 +331,9 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 0, new int[] { 2, 3, 4 })]
     [InlineData(new int[] { 1, 2, 3, 4 }, 1, new int[] { 1, 3, 4 })]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 2, new int[] { 1, 2, 4 })]
     [InlineData(new int[] { 1, 2, 3, 4 }, 3, new int[] { 1, 2, 3 })]
     [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 4, new int[] { 1, 2, 3, 4, 6 })]
     [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 5, new int[] { 1, 2, 3, 4, 5 })]
