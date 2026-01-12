@@ -64,6 +64,29 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { 100, 200, 300 }, -1)]
+    [InlineData(new int[] { 100, 200, 300, }, 1)]
+    [InlineData(new int[] { 100, 200, 300, }, 2)]
+    [InlineData(new int[] { 100, 200, 300, }, 3)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, -1)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 1)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 2)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 3)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 4)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 5)]
+    [InlineData(new int[] { 100, 200, 300, 400, 500, 600 }, 6)]
+    public void CopyTo_InvalidArrayIndex_ThrowsIndexOutOfRangeException(int[] expectedArray, int arrayIndex)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(expectedArray);
+
+        var actualArray = new int[expectedArray.Length];
+
+        // Act & Assert
+        Assert.Throws<IndexOutOfRangeException>(() => smallList.CopyTo(actualArray, arrayIndex));
+    }
+
+    [Theory]
     [InlineData(new int[] { 100, 200, 300 })]
     [InlineData(new int[] { 100, 200, 300, 400, 500, 600, 700, 800 })]
     [InlineData(new int[] { 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 })]
