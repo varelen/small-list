@@ -340,6 +340,21 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { 1, 2 }, -1)]
+    [InlineData(new int[] { 1, 2 }, 2)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 100)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 6)]
+    public void Insert_InvalidIndex_ThrowsIndexOutOfRangeException(int[] items, int index)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act & Assert
+        Assert.Throws<IndexOutOfRangeException>(() => smallList.Insert(index, 42));
+    }
+
+    [Theory]
     [InlineData(new int[] { 1 }, 0, 123, new int[] { 123, 1 })]
     [InlineData(new int[] { 1, 2 }, 1, 123, new int[] { 1, 123, 2 })]
     [InlineData(new int[] { 1, 2, 3 }, 2, 123, new int[] { 1, 2, 123, 3 })]
