@@ -53,10 +53,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         {
             Debug.Assert(this.size >= 0 && this.size <= InlinedItemsCount || this.array is not null, "Invalid size/array state");
 
-            if ((uint)index > (uint)this.size)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            this.ThrowIfIndexOutOfRange(index);
 
             ref var start = ref Unsafe.AsRef(in this.item1);
 
@@ -74,10 +71,8 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         set
 #pragma warning restore IDE0251 // Make member 'readonly'
         {
-            if ((uint)index > (uint)this.size)
-            {
-                throw new IndexOutOfRangeException();
-            }
+
+            this.ThrowIfIndexOutOfRange(index);
 
             ref var currentValue = ref Unsafe.NullRef<T>();
 
@@ -282,6 +277,15 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         this.array = newArray;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private readonly void ThrowIfIndexOutOfRange(int index)
+    {
+        if ((uint)index >= (uint)this.size)
+        {
+            throw new IndexOutOfRangeException($"Index was '{index}' and size is '{this.size}'");
+        }
+    }
+
     /// <summary>
     /// Adds the item to this list.
     ///
@@ -435,11 +439,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// </summary>
     /// <param name="index">The target index.</param>
     /// <param name="item">The item.</param>
-    /// <exception cref="ArgumentOutOfRangeException">If the index is larger than the current size.</exception>
+    /// <exception cref="IndexOutOfRangeException">If the index is larger or equal than the current size.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Insert(int index, T item)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan((uint)index, (uint)this.size);
+        this.ThrowIfIndexOutOfRange(index);
 
         // Fast path because we can just shift the inlined items
         if (this.size < InlinedItemsCount)
@@ -518,11 +522,11 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// Removes one item at the given index from this list.
     /// </summary>
     /// <param name="index">The index of the item to remove.</param>
-    /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="index"/> is out of bounds.</exception>
+    /// <exception cref="IndexOutOfRangeException">If the <paramref name="index"/> is out of bounds.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RemoveAt(int index)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual((uint)index, (uint)this.size);
+        this.ThrowIfIndexOutOfRange(index);
 
         this.size--;
 

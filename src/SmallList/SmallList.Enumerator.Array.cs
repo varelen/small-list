@@ -23,7 +23,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
         public ArrayEnumerator(in SmallList<T> list)
         {
             Debug.Assert(list.size > InlinedItemsCount, "Array enumerator should only be used if there are more items than inlined items count");
-            Debug.Assert(list.array is not null, "Array should not be null");
+            Debug.Assert(list.array is not null, "Array must not be null");
 
             this.array = list.array;
             this.length = list.array.Length;

@@ -42,6 +42,8 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
 
         internal RefEnumerator(ref SmallList<T> list)
         {
+            Debug.Assert(list.size >= 0, "Invalid list size, needs to be >= 0");
+
             this.count = list.size;
             this.index = -1;
             this.first = ref list.array is not null
