@@ -113,18 +113,24 @@ public class SmallListTests
         // Arrange & Act
         var empty = new SmallList<int>();
         var emptyArray = new SmallList<int>([]);
+        var emptyIEnumerable = new SmallList<int>(Enumerable.Empty<int>());
         var one = new SmallList<int>(1);
         var two = new SmallList<int>(1, 2);
         var three = new SmallList<int>(1, 2, 3);
         var four = new SmallList<int>(1, 2, 3, 4);
+        var fourFromArray = new SmallList<int>([1, 2, 3, 4]);
+        var fourFromIEnumerable = new SmallList<int>(Enumerable.Range(1, 4));
 
         // Assert
         AssertList(empty, []);
         AssertList(emptyArray, []);
+        AssertList(emptyIEnumerable, []);
         AssertList(one, [1]);
         AssertList(two, [1, 2]);
         AssertList(three, [1, 2, 3]);
         AssertList(four, [1, 2, 3, 4]);
+        AssertList(fourFromArray, [1, 2, 3, 4]);
+        AssertList(fourFromIEnumerable, [1, 2, 3, 4]);
     }
 
     [Fact]
@@ -132,12 +138,15 @@ public class SmallListTests
     {
         // Arrange & Act
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var listWithInlineCount = new List<int> { 1, 2, 3, 4 };
         var empy = new SmallList<int>();
         var smallList = new SmallList<int>(list);
+        var inlinedList = new SmallList<int>(listWithInlineCount);
 
         // Assert
         AssertList(empy, []);
         AssertList(smallList, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        AssertList(inlinedList, [1, 2, 3, 4]);
         Assert.Equal(16, smallList.Capacity);
     }
 
