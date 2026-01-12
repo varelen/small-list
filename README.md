@@ -40,7 +40,7 @@ You can use [NuGet](https://www.nuget.org/packages/Varelen.SmallList/) to instal
 Example via .NET CLI:
 
 ```bash
-dotnet add package Varelen.SmallList --version 0.0.1-alpha2
+dotnet add package Varelen.SmallList --version 0.0.1-alpha3
 ```
 
 ## Usage
