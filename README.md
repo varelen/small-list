@@ -1,6 +1,7 @@
 # small-list
 
 ![Build and Test](https://github.com/varelen/small-list/actions/workflows/dotnet.yml/badge.svg?branch=main)
+![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/varelen/b7fbb39b2c38deefe76a2f1e13bb9901/raw/d4589424e4605336b84738bca8c2b1ecb3fe145f/small-list-cobertura-coverage.json)
 ![NuGet Version](https://img.shields.io/nuget/v/Varelen.SmallList)
 ![GitHub License](https://img.shields.io/github/license/varelen/small-list)
 
