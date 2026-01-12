@@ -199,6 +199,36 @@ public class SmallListTests
         Assert.Equal(700, smallList[5]);
     }
 
+    [Theory]
+    [InlineData(new int[] { 1, 2 }, -1)]
+    [InlineData(new int[] { 1, 2 }, 2)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 100)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 6)]
+    public void Indexer_InvalidGetIndex_ThrowsIndexOutOfRangeException(int[] items, int index)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act & Assert
+        Assert.Throws<IndexOutOfRangeException>(() => smallList[index]);
+    }
+
+    [Theory]
+    [InlineData(new int[] { 1, 2 }, -1)]
+    [InlineData(new int[] { 1, 2 }, 2)]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 100)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, -1)]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 6)]
+    public void Indexer_InvalidSetIndex_ThrowsIndexOutOfRangeException(int[] items, int index)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act & Assert
+        Assert.Throws<IndexOutOfRangeException>(() => smallList[index] = 42);
+    }
+
     [Fact]
     public void Indexer_MultipleAccessesAllInlined_ReturnsExpectedItems()
     {
