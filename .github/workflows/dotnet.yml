@@ -28,5 +28,5 @@ jobs:
       uses: GaelGirodon/ci-badges-action@v1
       with:
         gist-id: ${{ secrets.GIST_ID }}
-        gist-token: ${{ secrets.GIST_TOKEN }}
+        token: ${{ secrets.GIST_TOKEN }}
         cobertura-path: coverage/**/coverage.cobertura.xml
