@@ -100,16 +100,6 @@ public class SmallListTests
         AssertList(two, [1, 2]);
         AssertList(three, [1, 2, 3]);
         AssertList(four, [1, 2, 3, 4]);
-
-        static void AssertList(in SmallList<int> smallList, int[] expectedItems)
-        {
-            Assert.Equal(expectedItems.Length, smallList.Count);
-
-            for (int i = 0; i < expectedItems.Length; i++)
-            {
-                Assert.Equal(expectedItems[i], smallList[i]);
-            }
-        }
     }
 
     [Fact]
@@ -124,16 +114,6 @@ public class SmallListTests
         AssertList(empy, []);
         AssertList(smallList, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
         Assert.Equal(16, smallList.Capacity);
-
-        static void AssertList(in SmallList<int> smallList, int[] expectedItems)
-        {
-            Assert.Equal(expectedItems.Length, smallList.Count);
-
-            for (int i = 0; i < expectedItems.Length; i++)
-            {
-                Assert.Equal(expectedItems[i], smallList[i]);
-            }
-        }
     }
 
     [Fact]
@@ -272,6 +252,23 @@ public class SmallListTests
     }
 
     [Theory]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 1, new int[] { 1, 3, 4 })]
+    [InlineData(new int[] { 1, 2, 3, 4 }, 3, new int[] { 1, 2, 3 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 4, new int[] { 1, 2, 3, 4, 6 })]
+    [InlineData(new int[] { 1, 2, 3, 4, 5, 6 }, 5, new int[] { 1, 2, 3, 4, 5 })]
+    public void RemoveAt_MatchesExpectedItems(int[] items, int index, int[] expectedItems)
+    {
+        // Arrange
+        var smallList = new SmallList<int>(items);
+
+        // Act
+        smallList.RemoveAt(index);
+
+        // Assert
+        AssertList(smallList, expectedItems);
+    }
+
+    [Theory]
     [InlineData(new int[] { 1, 2, 3, 4 }, 2, true)]
     [InlineData(new int[] { 1, 2, 3, 4 }, 4, true)]
     [InlineData(new int[] { 1, 2, 3, 4 }, -1, false)]
@@ -315,6 +312,16 @@ public class SmallListTests
 
         // Assert
         Assert.Equal(smallList.Count, expectedItems.Length);
+        for (int i = 0; i < expectedItems.Length; i++)
+        {
+            Assert.Equal(expectedItems[i], smallList[i]);
+        }
+    }
+
+    private static void AssertList(in SmallList<int> smallList, int[] expectedItems)
+    {
+        Assert.Equal(expectedItems.Length, smallList.Count);
+
         for (int i = 0; i < expectedItems.Length; i++)
         {
             Assert.Equal(expectedItems[i], smallList[i]);
