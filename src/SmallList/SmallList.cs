@@ -365,13 +365,13 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// </summary>
     /// <param name="array">The target array.</param>
     /// <param name="arrayIndex">The target array offset.</param>
-    /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="arrayIndex"/> is out of bounds.</exception>
+    /// <exception cref="IndexOutOfRangeException">If the <paramref name="arrayIndex"/> is out of bounds.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void CopyTo(T[] array, int arrayIndex)
     {
-        if (arrayIndex < 0 || ((uint)(arrayIndex + array.Length) > (uint)this.size))
+        if (arrayIndex < 0 || (uint)this.size > (uint)(array.Length - arrayIndex))
         {
-            throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            throw new IndexOutOfRangeException($"Array index was '{arrayIndex}' and size is '{this.size}'");
         }
 
         if (this.size < InlinedItemsCount)
