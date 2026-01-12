@@ -605,7 +605,7 @@ public partial struct SmallList<T> : IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Specialized enumerator for empty lists.
     /// </summary>
-    public struct EmptyEnumerator : IEnumerator<T>, IEnumerator
+    internal struct EmptyEnumerator : IEnumerator<T>, IEnumerator
     {
         /// <inheritdoc/>
         public T Current
